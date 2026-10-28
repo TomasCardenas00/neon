@@ -7,6 +7,6 @@
 3. crear instancia
 4. crear db
 
-# aaaa
+# Grafo
 
 ![Texto alternativo](bloom-visualisation.svg)
