@@ -1,0 +1,560 @@
+// ============================================================
+// GERIATRICO - SCRIPT UNIFICADO (BASE DE DATOS + POBLADO MASIVO)
+// Compatible con Neo4j 5.x
+// ============================================================
+
+// ==========================================
+// 1. RESTRICCIONES DE UNICIDAD E ÍNDICES
+// ==========================================
+CREATE CONSTRAINT tipo_documento_id_unique IF NOT EXISTS FOR (n:TipoDocumento) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT parentesco_id_unique IF NOT EXISTS FOR (n:Parentesco) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT direccion_id_unique IF NOT EXISTS FOR (n:Direccion) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT telefono_id_unique IF NOT EXISTS FOR (n:Telefono) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT persona_id_unique IF NOT EXISTS FOR (n:Persona) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT empleado_id_unique IF NOT EXISTS FOR (n:Empleado) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT acudiente_id_unique IF NOT EXISTS FOR (n:Acudiente) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT estado_cama_id_unique IF NOT EXISTS FOR (n:EstadoCama) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT habitacion_id_unique IF NOT EXISTS FOR (n:Habitacion) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT cama_id_unique IF NOT EXISTS FOR (n:Cama) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT residente_id_unique IF NOT EXISTS FOR (n:Residente) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT turno_id_unique IF NOT EXISTS FOR (n:Turno) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT bitacora_id_unique IF NOT EXISTS FOR (n:Bitacora) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT tipo_actividad_id_unique IF NOT EXISTS FOR (n:TipoActividad) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT actividad_id_unique IF NOT EXISTS FOR (n:Actividad) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT historial_medico_id_unique IF NOT EXISTS FOR (n:HistorialMedico) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT enfermedad_id_unique IF NOT EXISTS FOR (n:Enfermedad) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT diagnostico_id_unique IF NOT EXISTS FOR (n:Diagnostico) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT alergia_id_unique IF NOT EXISTS FOR (n:Alergia) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT medicamento_id_unique IF NOT EXISTS FOR (n:Medicamento) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT prescripcion_id_unique IF NOT EXISTS FOR (n:Prescripcion) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT administracion_medicamento_id_unique IF NOT EXISTS FOR (n:AdministracionMedicamento) REQUIRE n.id IS UNIQUE;
+
+// ==========================================
+// 2. DATOS INICIALES Y CATÁLOGOS (IDs 1 - 999)
+// ==========================================
+
+// TipoDocumento
+CREATE (:TipoDocumento {id: 1, nombre_documento: "Cédula de Ciudadanía", descripcion: "Documento nacional de identidad"});
+CREATE (:TipoDocumento {id: 2, nombre_documento: "Cédula de Extranjería", descripcion: "Para extranjeros residentes en el país"});
+CREATE (:TipoDocumento {id: 3, nombre_documento: "Pasaporte", descripcion: "Documento de viaje internacional"});
+CREATE (:TipoDocumento {id: 4, nombre_documento: "Tarjeta de Identidad", descripcion: "Para menores de edad (histórico)"});
+CREATE (:TipoDocumento {id: 5, nombre_documento: "Registro Civil", descripcion: "Documento base de nacimiento"});
+CREATE (:TipoDocumento {id: 6, nombre_documento: "Documento Nacional de Identidad", descripcion: "DNI de otro país"});
+CREATE (:TipoDocumento {id: 7, nombre_documento: "Permiso Especial de Permanencia", descripcion: "PEP para migrantes"});
+CREATE (:TipoDocumento {id: 8, nombre_documento: "Carné Diplomático", descripcion: "Identificación para funcionarios extranjeros"});
+CREATE (:TipoDocumento {id: 9, nombre_documento: "Salvoconducto", descripcion: "Documento temporal de migración"});
+CREATE (:TipoDocumento {id: 10, nombre_documento: "Número de Identificación Tributaria", descripcion: "NIT especial o alternativo"});
+
+// Parentesco
+CREATE (:Parentesco {id: 1, tipo_parentesco: "Hijo/a"});
+CREATE (:Parentesco {id: 2, tipo_parentesco: "Hermano/a"});
+CREATE (:Parentesco {id: 3, tipo_parentesco: "Sobrino/a"});
+CREATE (:Parentesco {id: 4, tipo_parentesco: "Cónyuge"});
+CREATE (:Parentesco {id: 5, tipo_parentesco: "Nieto/a"});
+CREATE (:Parentesco {id: 6, tipo_parentesco: "Primo/a"});
+CREATE (:Parentesco {id: 7, tipo_parentesco: "Yerno/Nuera"});
+CREATE (:Parentesco {id: 8, tipo_parentesco: "Amigo/a cercano"});
+CREATE (:Parentesco {id: 9, tipo_parentesco: "Tío/a"});
+CREATE (:Parentesco {id: 10, tipo_parentesco: "Representante Legal"});
+
+// Direccion
+CREATE (:Direccion {id: 1, tipo_via: "Calle", nombre_via: "100", numero: "15-20", complemento: "Apto 301", barrio: "Chicó", ciudad: "Bogotá", departamento: "Bogotá D.C.", codigo_postal: "110111"});
+CREATE (:Direccion {id: 2, tipo_via: "Carrera", nombre_via: "7", numero: "45-62", complemento: "Torre 2 Piso 5", barrio: "Chapinero", ciudad: "Bogotá", departamento: "Bogotá D.C.", codigo_postal: "110221"});
+CREATE (:Direccion {id: 3, tipo_via: "Avenida", nombre_via: "Calle 26", numero: "69-76", complemento: "Oficina 402", barrio: "Salitre", ciudad: "Bogotá", departamento: "Bogotá D.C.", codigo_postal: "110931"});
+CREATE (:Direccion {id: 4, tipo_via: "Diagonal", nombre_via: "23", numero: "50-10", complemento: "Casa", barrio: "Heliópolis", ciudad: "Bogotá", departamento: "Bogotá D.C.", codigo_postal: "111071"});
+CREATE (:Direccion {id: 5, tipo_via: "Transversal", nombre_via: "55", numero: "10-34", complemento: "Interior 4", barrio: "Niza", ciudad: "Bogotá", departamento: "Bogotá D.C.", codigo_postal: "111111"});
+CREATE (:Direccion {id: 6, tipo_via: "Calle", nombre_via: "72", numero: "10-07", complemento: "Piso 8", barrio: "Rosales", ciudad: "Bogotá", departamento: "Bogotá D.C.", codigo_postal: "110231"});
+CREATE (:Direccion {id: 7, tipo_via: "Carrera", nombre_via: "15", numero: "93-60", complemento: "Local 2", barrio: "Chicó Norte", ciudad: "Bogotá", departamento: "Bogotá D.C.", codigo_postal: "110222"});
+CREATE (:Direccion {id: 8, tipo_via: "Calle", nombre_via: "127", numero: "20-40", complemento: "Casa 12", barrio: "Unicentro", ciudad: "Bogotá", departamento: "Bogotá D.C.", codigo_postal: "110131"});
+CREATE (:Direccion {id: 9, tipo_via: "Avenida", nombre_via: "Suba", numero: "115-58", complemento: "Apto 102", barrio: "Ilarco", ciudad: "Bogotá", departamento: "Bogotá D.C.", codigo_postal: "111151"});
+CREATE (:Direccion {id: 10, tipo_via: "Calle", nombre_via: "140", numero: "7-30", complemento: "Conjunto Verde", barrio: "Cedritos", ciudad: "Bogotá", departamento: "Bogotá D.C.", codigo_postal: "110121"});
+
+// Telefono
+CREATE (:Telefono {id: 1, numero: "3101234567", indicativo: "+57", tipo_telefono: "Móvil"});
+CREATE (:Telefono {id: 2, numero: "3209876543", indicativo: "+57", tipo_telefono: "Móvil"});
+CREATE (:Telefono {id: 3, numero: "3154567890", indicativo: "+57", tipo_telefono: "Móvil"});
+CREATE (:Telefono {id: 4, numero: "3007891234", indicativo: "+57", tipo_telefono: "Móvil"});
+CREATE (:Telefono {id: 5, numero: "6012345678", indicativo: "+57", tipo_telefono: "Fijo"});
+CREATE (:Telefono {id: 6, numero: "6018765432", indicativo: "+57", tipo_telefono: "Fijo"});
+CREATE (:Telefono {id: 7, numero: "3185551234", indicativo: "+57", tipo_telefono: "Móvil"});
+CREATE (:Telefono {id: 8, numero: "3114449876", indicativo: "+57", tipo_telefono: "Móvil"});
+CREATE (:Telefono {id: 9, numero: "6013332211", indicativo: "+57", tipo_telefono: "Fijo"});
+CREATE (:Telefono {id: 10, numero: "3167778899", indicativo: "+57", tipo_telefono: "Móvil"});
+
+// Persona
+CREATE (:Persona {id: 1, numero_documento: "1010101011", nombre_persona: "Carlos Alberto", apellido_persona: "Pérez Gómez", fecha_nac: date("1980-03-15"), correo: "carlos.perez@geriatrico.com"});
+CREATE (:Persona {id: 2, numero_documento: "1010101012", nombre_persona: "María Fernanda", apellido_persona: "Rodríguez López", fecha_nac: date("1985-07-22"), correo: "maria.rodriguez@geriatrico.com"});
+CREATE (:Persona {id: 3, numero_documento: "1010101013", nombre_persona: "Jorge Enrique", apellido_persona: "Martínez Silva", fecha_nac: date("1990-11-05"), correo: "jorge.martinez@geriatrico.com"});
+CREATE (:Persona {id: 4, numero_documento: "1010101014", nombre_persona: "Lucía Sofía", apellido_persona: "Hernández Ruiz", fecha_nac: date("1988-01-30"), correo: "lucia.hernandez@geriatrico.com"});
+CREATE (:Persona {id: 5, numero_documento: "1010101015", nombre_persona: "Andrés Felipe", apellido_persona: "Ramírez Castro", fecha_nac: date("1992-09-10"), correo: "andres.ramirez@geriatrico.com"});
+CREATE (:Persona {id: 6, numero_documento: "1010101016", nombre_persona: "Claudia Patricia", apellido_persona: "Torres Morales", fecha_nac: date("1975-12-04"), correo: "claudia.torres@geriatrico.com"});
+CREATE (:Persona {id: 7, numero_documento: "1010101017", nombre_persona: "Héctor Julio", apellido_persona: "Vargas Rojas", fecha_nac: date("1982-06-18"), correo: "hector.vargas@geriatrico.com"});
+CREATE (:Persona {id: 8, numero_documento: "1010101018", nombre_persona: "Diana Carolina", apellido_persona: "Mendoza Parra", fecha_nac: date("1994-04-25"), correo: "diana.mendoza@geriatrico.com"});
+CREATE (:Persona {id: 9, numero_documento: "1010101019", nombre_persona: "Ricardo José", apellido_persona: "Jiménez Acosta", fecha_nac: date("1987-08-14"), correo: "ricardo.jimenez@geriatrico.com"});
+CREATE (:Persona {id: 10, numero_documento: "1010101020", nombre_persona: "Sandra Milena", apellido_persona: "Castro Medina", fecha_nac: date("1991-02-19"), correo: "sandra.castro@geriatrico.com"});
+CREATE (:Persona {id: 11, numero_documento: "1010101021", nombre_persona: "Juan Carlos", apellido_persona: "Gómez Pérez", fecha_nac: date("1983-05-12"), correo: "juan.gomez@geriatrico.com"});
+CREATE (:Persona {id: 12, numero_documento: "79123456", nombre_persona: "Roberto", apellido_persona: "Gutiérrez Neira", fecha_nac: date("1945-05-10"), correo: "roberto.gutierrez@gmail.com"});
+CREATE (:Persona {id: 13, numero_documento: "52345678", nombre_persona: "Elena", apellido_persona: "Suárez Vargas", fecha_nac: date("1948-09-12"), correo: "elena.suarez@gmail.com"});
+CREATE (:Persona {id: 14, numero_documento: "19283746", nombre_persona: "Alfonso", apellido_persona: "Londoño Mejía", fecha_nac: date("1940-12-01"), correo: "alfonso.londono@gmail.com"});
+CREATE (:Persona {id: 15, numero_documento: "39876543", nombre_persona: "Rosa María", apellido_persona: "Cifuentes Prada", fecha_nac: date("1950-03-20"), correo: "rosa.cifuentes@gmail.com"});
+CREATE (:Persona {id: 16, numero_documento: "80192837", nombre_persona: "Gabriel", apellido_persona: "Restrepo Uribe", fecha_nac: date("1942-07-15"), correo: "gabriel.restrepo@gmail.com"});
+CREATE (:Persona {id: 17, numero_documento: "41928374", nombre_persona: "Carmen Sofía", apellido_persona: "Duarte Pineda", fecha_nac: date("1946-11-28"), correo: "carmen.duarte@gmail.com"});
+CREATE (:Persona {id: 18, numero_documento: "72839405", nombre_persona: "Luis Eduardo", apellido_persona: "Pacheco Silva", fecha_nac: date("1939-02-14"), correo: "luis.pacheco@gmail.com"});
+CREATE (:Persona {id: 19, numero_documento: "51928374", nombre_persona: "Inés", apellido_persona: "Moreno Restrepo", fecha_nac: date("1952-08-30"), correo: "ines.moreno@gmail.com"});
+CREATE (:Persona {id: 20, numero_documento: "10293847", nombre_persona: "Guillermo", apellido_persona: "Valencia Ospina", fecha_nac: date("1944-04-05"), correo: "guillermo.valencia@gmail.com"});
+CREATE (:Persona {id: 21, numero_documento: "31928374", nombre_persona: "Beatriz", apellido_persona: "Ochoa Echeverri", fecha_nac: date("1949-10-19"), correo: "beatriz.ochoa@gmail.com"});
+
+// Relaciones básicas de Persona
+MATCH (p:Persona), (t:TipoDocumento {id: 1}) WHERE p.id IN range(1,21) CREATE (p)-[:TIENE_TIPO_DOCUMENTO]->(t);
+MATCH (p:Persona), (tel:Telefono) WHERE p.id = tel.id AND p.id <= 10 CREATE (p)-[:TIENE_TELEFONO]->(tel);
+MATCH (p:Persona), (d:Direccion) WHERE p.id = d.id AND p.id <= 10 CREATE (p)-[:TIENE_DIRECCION {tipo_direccion: "Principal"}]->(d);
+
+// Empleados y Acudientes
+CREATE (:Empleado {id: 1, titulo_profesional: "Médico General", rol_empleado: "Médico", estado: "Activo"});
+CREATE (:Empleado {id: 2, titulo_profesional: "Enfermera Jefe", rol_empleado: "Enfermera", estado: "Activo"});
+CREATE (:Empleado {id: 3, titulo_profesional: "Fisioterapeuta", rol_empleado: "Terapeuta", estado: "Activo"});
+CREATE (:Empleado {id: 4, titulo_profesional: "Nutricionista", rol_empleado: "Nutricionista", estado: "Activo"});
+CREATE (:Empleado {id: 5, titulo_profesional: "Auxiliar de Enfermería", rol_empleado: "Cuidador", estado: "Activo"});
+CREATE (:Empleado {id: 6, titulo_profesional: "Psicóloga", rol_empleado: "Psicólogo", estado: "Activo"});
+CREATE (:Empleado {id: 7, titulo_profesional: "Auxiliar de Enfermería", rol_empleado: "Cuidador", estado: "Activo"});
+CREATE (:Empleado {id: 8, titulo_profesional: "Trabajadora Social", rol_empleado: "Trabajador Social", estado: "Activo"});
+CREATE (:Empleado {id: 9, titulo_profesional: "Terapeuta Ocupacional", rol_empleado: "Terapeuta", estado: "Activo"});
+CREATE (:Empleado {id: 10, titulo_profesional: "Auxiliar de Enfermería", rol_empleado: "Cuidador", estado: "Activo"});
+
+MATCH (e:Empleado), (p:Persona) WHERE e.id = p.id AND e.id <= 10 CREATE (e)-[:ES_PERSONA]->(p);
+
+CREATE (:Acudiente {id: 1, observaciones: "Hijo encargado de autorizaciones médicas"});
+CREATE (:Acudiente {id: 2, observaciones: "Hija disponible los fines de semana"});
+CREATE (:Acudiente {id: 3, observaciones: "Sobrino con poder legal"});
+CREATE (:Acudiente {id: 4, observaciones: "Cónyuge con visitas diarias"});
+CREATE (:Acudiente {id: 5, observaciones: "Familiar directo autorizado para pagos"});
+
+MATCH (a:Acudiente {id: 1}), (p:Persona {id: 11}) CREATE (a)-[:ES_PERSONA]->(p);
+MATCH (a:Acudiente {id: 2}), (p:Persona {id: 12}) CREATE (a)-[:ES_PERSONA]->(p);
+MATCH (a:Acudiente {id: 3}), (p:Persona {id: 13}) CREATE (a)-[:ES_PERSONA]->(p);
+MATCH (a:Acudiente {id: 4}), (p:Persona {id: 14}) CREATE (a)-[:ES_PERSONA]->(p);
+MATCH (a:Acudiente {id: 5}), (p:Persona {id: 15}) CREATE (a)-[:ES_PERSONA]->(p);
+
+// Infraestructura y Habitaciones
+CREATE (:EstadoCama {id: 1, nombre_estado: "Disponible"});
+CREATE (:EstadoCama {id: 2, nombre_estado: "Ocupada"});
+CREATE (:EstadoCama {id: 3, nombre_estado: "Mantenimiento"});
+
+CREATE (:Habitacion {id: 1, piso_habitacion: 1, capacidad_maxima: 2});
+CREATE (:Habitacion {id: 2, piso_habitacion: 1, capacidad_maxima: 2});
+CREATE (:Habitacion {id: 3, piso_habitacion: 1, capacidad_maxima: 1});
+CREATE (:Habitacion {id: 4, piso_habitacion: 2, capacidad_maxima: 2});
+CREATE (:Habitacion {id: 5, piso_habitacion: 2, capacidad_maxima: 2});
+CREATE (:Habitacion {id: 6, piso_habitacion: 2, capacidad_maxima: 1});
+CREATE (:Habitacion {id: 7, piso_habitacion: 3, capacidad_maxima: 2});
+CREATE (:Habitacion {id: 8, piso_habitacion: 3, capacidad_maxima: 2});
+CREATE (:Habitacion {id: 9, piso_habitacion: 3, capacidad_maxima: 1});
+CREATE (:Habitacion {id: 10, piso_habitacion: 3, capacidad_maxima: 2});
+
+CREATE (:Cama {id: 1, codigo_cama: "CAMA-101-A"});
+CREATE (:Cama {id: 2, codigo_cama: "CAMA-101-B"});
+CREATE (:Cama {id: 3, codigo_cama: "CAMA-102-A"});
+CREATE (:Cama {id: 4, codigo_cama: "CAMA-102-B"});
+CREATE (:Cama {id: 5, codigo_cama: "CAMA-103-A"});
+CREATE (:Cama {id: 6, codigo_cama: "CAMA-201-A"});
+CREATE (:Cama {id: 7, codigo_cama: "CAMA-201-B"});
+CREATE (:Cama {id: 8, codigo_cama: "CAMA-202-A"});
+CREATE (:Cama {id: 9, codigo_cama: "CAMA-202-B"});
+CREATE (:Cama {id: 10, codigo_cama: "CAMA-203-A"});
+
+MATCH (c:Cama {id: 1}), (h:Habitacion {id: 1}), (e:EstadoCama {id: 2}) CREATE (c)-[:EN_HABITACION]->(h), (c)-[:TIENE_ESTADO]->(e);
+MATCH (c:Cama {id: 2}), (h:Habitacion {id: 1}), (e:EstadoCama {id: 2}) CREATE (c)-[:EN_HABITACION]->(h), (c)-[:TIENE_ESTADO]->(e);
+MATCH (c:Cama {id: 3}), (h:Habitacion {id: 2}), (e:EstadoCama {id: 2}) CREATE (c)-[:EN_HABITACION]->(h), (c)-[:TIENE_ESTADO]->(e);
+MATCH (c:Cama {id: 4}), (h:Habitacion {id: 2}), (e:EstadoCama {id: 2}) CREATE (c)-[:EN_HABITACION]->(h), (c)-[:TIENE_ESTADO]->(e);
+MATCH (c:Cama {id: 5}), (h:Habitacion {id: 3}), (e:EstadoCama {id: 2}) CREATE (c)-[:EN_HABITACION]->(h), (c)-[:TIENE_ESTADO]->(e);
+MATCH (c:Cama {id: 6}), (h:Habitacion {id: 4}), (e:EstadoCama {id: 2}) CREATE (c)-[:EN_HABITACION]->(h), (c)-[:TIENE_ESTADO]->(e);
+MATCH (c:Cama {id: 7}), (h:Habitacion {id: 4}), (e:EstadoCama {id: 2}) CREATE (c)-[:EN_HABITACION]->(h), (c)-[:TIENE_ESTADO]->(e);
+MATCH (c:Cama {id: 8}), (h:Habitacion {id: 5}), (e:EstadoCama {id: 2}) CREATE (c)-[:EN_HABITACION]->(h), (c)-[:TIENE_ESTADO]->(e);
+MATCH (c:Cama {id: 9}), (h:Habitacion {id: 5}), (e:EstadoCama {id: 1}) CREATE (c)-[:EN_HABITACION]->(h), (c)-[:TIENE_ESTADO]->(e);
+MATCH (c:Cama {id: 10}), (h:Habitacion {id: 6}), (e:EstadoCama {id: 1}) CREATE (c)-[:EN_HABITACION]->(h), (c)-[:TIENE_ESTADO]->(e);
+
+// Residentes y Asignaciones
+CREATE (:Residente {id: 1, fecha_ingreso: date("2024-01-15"), estado: "Activo"});
+CREATE (:Residente {id: 2, fecha_ingreso: date("2024-02-10"), estado: "Activo"});
+CREATE (:Residente {id: 3, fecha_ingreso: date("2023-11-20"), estado: "Activo"});
+CREATE (:Residente {id: 4, fecha_ingreso: date("2024-03-05"), estado: "Activo"});
+CREATE (:Residente {id: 5, fecha_ingreso: date("2024-04-12"), estado: "Activo"});
+
+MATCH (r:Residente {id: 1}), (p:Persona {id: 16}), (c:Cama {id: 1}), (e:Empleado {id: 2}) CREATE (r)-[:ES_PERSONA]->(p), (r)-[:OCUPA_CAMA]->(c), (e)-[:RESPONSABLE_DE]->(r);
+MATCH (r:Residente {id: 2}), (p:Persona {id: 17}), (c:Cama {id: 2}), (e:Empleado {id: 2}) CREATE (r)-[:ES_PERSONA]->(p), (r)-[:OCUPA_CAMA]->(c), (e)-[:RESPONSABLE_DE]->(r);
+MATCH (r:Residente {id: 3}), (p:Persona {id: 18}), (c:Cama {id: 3}), (e:Empleado {id: 5}) CREATE (r)-[:ES_PERSONA]->(p), (r)-[:OCUPA_CAMA]->(c), (e)-[:RESPONSABLE_DE]->(r);
+MATCH (r:Residente {id: 4}), (p:Persona {id: 19}), (c:Cama {id: 4}), (e:Empleado {id: 7}) CREATE (r)-[:ES_PERSONA]->(p), (r)-[:OCUPA_CAMA]->(c), (e)-[:RESPONSABLE_DE]->(r);
+MATCH (r:Residente {id: 5}), (p:Persona {id: 20}), (c:Cama {id: 5}), (e:Empleado {id: 10}) CREATE (r)-[:ES_PERSONA]->(p), (r)-[:OCUPA_CAMA]->(c), (e)-[:RESPONSABLE_DE]->(r);
+
+// Relación Residente -> Acudiente
+MATCH (r:Residente {id: 1}), (a:Acudiente {id: 1}) CREATE (r)-[:TIENE_ACUDIENTE {parentesco: "Hijo/a", es_contacto_principal: true, observaciones: "Contacto principal para urgencias médicas"}]->(a);
+MATCH (r:Residente {id: 2}), (a:Acudiente {id: 2}) CREATE (r)-[:TIENE_ACUDIENTE {parentesco: "Hijo/a", es_contacto_principal: true, observaciones: "Hija responsable de suministros de aseo"}]->(a);
+MATCH (r:Residente {id: 3}), (a:Acudiente {id: 3}) CREATE (r)-[:TIENE_ACUDIENTE {parentesco: "Sobrino/a", es_contacto_principal: true, observaciones: "Sobrino a cargo de trámites administrativos"}]->(a);
+MATCH (r:Residente {id: 4}), (a:Acudiente {id: 4}) CREATE (r)-[:TIENE_ACUDIENTE {parentesco: "Cónyuge", es_contacto_principal: true, observaciones: "Cónyuge con visitas permanentes"}]->(a);
+MATCH (r:Residente {id: 5}), (a:Acudiente {id: 5}) CREATE (r)-[:TIENE_ACUDIENTE {parentesco: "Hermano/a", es_contacto_principal: true, observaciones: "Familiar autorizado"}]->(a);
+
+// Turnos y Bitácora Inicial
+CREATE (:Turno {id: 1, fecha: date("2026-10-15"), hora_inicio: time("06:00:00"), hora_fin: time("14:00:00"), estado: "Programado"});
+CREATE (:Turno {id: 2, fecha: date("2026-10-15"), hora_inicio: time("06:00:00"), hora_fin: time("14:00:00"), estado: "Programado"});
+CREATE (:Turno {id: 3, fecha: date("2026-10-15"), hora_inicio: time("08:00:00"), hora_fin: time("16:00:00"), estado: "Programado"});
+CREATE (:Turno {id: 4, fecha: date("2026-10-15"), hora_inicio: time("07:00:00"), hora_fin: time("15:00:00"), estado: "Programado"});
+CREATE (:Turno {id: 5, fecha: date("2026-10-15"), hora_inicio: time("14:00:00"), hora_fin: time("22:00:00"), estado: "Programado"});
+
+MATCH (e:Empleado), (t:Turno) WHERE e.id = t.id AND e.id <= 5 CREATE (e)-[:TIENE_TURNO]->(t);
+
+CREATE (:Bitacora {id: 1, fecha_hora: datetime("2026-10-14T07:30:00"), tipo_evento: "Control Signos", descripcion: "Toma de presión arterial matutina sin novedades.", estado: "Completado", nivel_prioridad: 1});
+CREATE (:Bitacora {id: 2, fecha_hora: datetime("2026-10-14T09:15:00"), tipo_evento: "Aseo", descripcion: "Aseo general de habitación y cambio de lencería.", estado: "Completado", nivel_prioridad: 2});
+CREATE (:Bitacora {id: 3, fecha_hora: datetime("2026-10-14T10:00:00"), tipo_evento: "Visita Médica", descripcion: "Evaluación médica general de rutina.", estado: "Completado", nivel_prioridad: 2});
+
+MATCH (b:Bitacora {id: 1}), (e:Empleado {id: 2}), (h:Habitacion {id: 1}) CREATE (e)-[:REGISTRO]->(b), (b)-[:EN_HABITACION]->(h);
+MATCH (b:Bitacora {id: 2}), (e:Empleado {id: 5}), (h:Habitacion {id: 1}) CREATE (e)-[:REGISTRO]->(b), (b)-[:EN_HABITACION]->(h);
+MATCH (b:Bitacora {id: 3}), (e:Empleado {id: 1}), (h:Habitacion {id: 2}) CREATE (e)-[:REGISTRO]->(b), (b)-[:EN_HABITACION]->(h);
+
+// Actividades y Participación Inicial
+CREATE (:TipoActividad {id: 1, nombre_tipo: "Terapia Física", req_asistencia: true, observaciones: "Ejercicios de movilidad guiados"});
+CREATE (:TipoActividad {id: 2, nombre_tipo: "Manualidades", req_asistencia: true, observaciones: "Estimulación cognitiva y motricidad fina"});
+CREATE (:TipoActividad {id: 3, nombre_tipo: "Musicoterapia", req_asistencia: false, observaciones: "Audición de música clásica y recuerdos"});
+
+CREATE (:Actividad {id: 1, descripcion: "Sesión matutina de estiramientos", cupo_maximo: 10, fecha_inicio: datetime("2026-10-16T09:00:00"), fecha_fin: datetime("2026-10-16T10:00:00"), estado: "Programada"});
+CREATE (:Actividad {id: 2, descripcion: "Taller de pintura y arcilla", cupo_maximo: 8, fecha_inicio: datetime("2026-10-16T10:30:00"), fecha_fin: datetime("2026-10-16T11:30:00"), estado: "Programada"});
+
+MATCH (a:Actividad {id: 1}), (t:TipoActividad {id: 1}), (e:Empleado {id: 3}) CREATE (a)-[:DE_TIPO]->(t), (e)-[:DIRIGE]->(a);
+MATCH (a:Actividad {id: 2}), (t:TipoActividad {id: 2}), (e:Empleado {id: 9}) CREATE (a)-[:DE_TIPO]->(t), (e)-[:DIRIGE]->(a);
+
+MATCH (r:Residente {id: 1}), (a:Actividad {id: 1}) CREATE (r)-[:PARTICIPA_EN {id_participacion: 1, asistencia: "Presente", nivel: "Activo", observaciones: "Muy buena disposición"}]->(a);
+MATCH (r:Residente {id: 2}), (a:Actividad {id: 1}) CREATE (r)-[:PARTICIPA_EN {id_participacion: 2, asistencia: "Presente", nivel: "Moderado", observaciones: "Participó con asistencia parcial"}]->(a);
+
+// Historial Médico, Diagnósticos, Alergias y Medicamentos Iniciales
+CREATE (:HistorialMedico {id: 1, observaciones: "Paciente con antecedentes de hipertensión arterial controlada y artrosis leve."});
+CREATE (:HistorialMedico {id: 2, observaciones: "Paciente diagnosticada con diabetes mellitus tipo 2 y problemas de movilidad."});
+
+MATCH (r:Residente {id: 1}), (h:HistorialMedico {id: 1}) CREATE (r)-[:TIENE_HISTORIAL]->(h);
+MATCH (r:Residente {id: 2}), (h:HistorialMedico {id: 2}) CREATE (r)-[:TIENE_HISTORIAL]->(h);
+
+CREATE (:Enfermedad {id: 1, nombre_enfermedad: "Hipertensión Arterial"});
+CREATE (:Enfermedad {id: 2, nombre_enfermedad: "Diabetes Mellitus Tipo 2"});
+
+CREATE (:Diagnostico {id: 1, fecha_diagnostico: date("2020-05-10"), observaciones: "Control periódico con medicina general"});
+CREATE (:Diagnostico {id: 2, fecha_diagnostico: date("2019-03-12"), observaciones: "Dieta baja en azúcares y control de glicemia"});
+
+MATCH (h:HistorialMedico {id: 1}), (d:Diagnostico {id: 1}), (e:Enfermedad {id: 1}) CREATE (h)-[:TIENE_DIAGNOSTICO]->(d), (d)-[:DE_ENFERMEDAD]->(e);
+MATCH (h:HistorialMedico {id: 2}), (d:Diagnostico {id: 2}), (e:Enfermedad {id: 2}) CREATE (h)-[:TIENE_DIAGNOSTICO]->(d), (d)-[:DE_ENFERMEDAD]->(e);
+
+CREATE (:Alergia {id: 1, nombre_alergia: "Penicilina"});
+CREATE (:Alergia {id: 2, nombre_alergia: "Sulfas"});
+
+MATCH (h:HistorialMedico {id: 1}), (a:Alergia {id: 1}) CREATE (h)-[:ALERGICO_A {observaciones: "Erupción cutánea leve al contacto"}]->(a);
+MATCH (h:HistorialMedico {id: 2}), (a:Alergia {id: 2}) CREATE (h)-[:ALERGICO_A {observaciones: "Reacción cruzada informada"}]->(a);
+
+CREATE (:Medicamento {id: 1, nombre: "Losartán", principio_activo: "Losartán Potásico", presentacion: "Tableta", concentracion: "50 mg", codigo_invima: "INVIMA-2018M-0012345"});
+CREATE (:Medicamento {id: 2, nombre: "Metformina", principio_activo: "Clorhidrato de Metformina", presentacion: "Tableta", concentracion: "850 mg", codigo_invima: "INVIMA-2019M-0054321"});
+
+CREATE (:Prescripcion {id: 1, fecha_prescripcion: date("2026-01-01"), fecha_fin: null, dosis_indicada: 1.00, frecuencia: "Cada 24 horas", indicaciones: "Tomar en ayunas con agua"});
+CREATE (:Prescripcion {id: 2, fecha_prescripcion: date("2026-01-15"), fecha_fin: null, dosis_indicada: 1.00, frecuencia: "Cada 12 horas con las comidas", indicaciones: "Tomar junto con el almuerzo y la cena"});
+
+MATCH (h:HistorialMedico {id: 1}), (p:Prescripcion {id: 1}), (m:Medicamento {id: 1}), (d:Diagnostico {id: 1}) CREATE (h)-[:TIENE_PRESCRIPCION]->(p), (p)-[:DE_MEDICAMENTO]->(m), (p)-[:PARA_DIAGNOSTICO]->(d);
+MATCH (h:HistorialMedico {id: 2}), (p:Prescripcion {id: 2}), (m:Medicamento {id: 2}), (d:Diagnostico {id: 2}) CREATE (h)-[:TIENE_PRESCRIPCION]->(p), (p)-[:DE_MEDICAMENTO]->(m), (p)-[:PARA_DIAGNOSTICO]->(d);
+
+CREATE (:AdministracionMedicamento {id: 1, fecha_aplicacion: datetime("2026-10-14T08:00:00"), dosis: 1.00, descripcion: "Administración de Losartán matutino", observaciones: "Suministrado sin novedad con agua"});
+CREATE (:AdministracionMedicamento {id: 2, fecha_aplicacion: datetime("2026-10-14T12:30:00"), dosis: 1.00, descripcion: "Administración de Metformina", observaciones: "Suministrado posterior al almuerzo"});
+
+MATCH (p:Prescripcion {id: 1}), (a:AdministracionMedicamento {id: 1}), (e:Empleado {id: 2}) CREATE (p)-[:TUVO_ADMINISTRACION]->(a), (e)-[:ADMINISTRO]->(a);
+MATCH (p:Prescripcion {id: 2}), (a:AdministracionMedicamento {id: 2}), (e:Empleado {id: 5}) CREATE (p)-[:TUVO_ADMINISTRACION]->(a), (e)-[:ADMINISTRO]->(a);
+
+
+// ==========================================
+// 3. POBLADO MASIVO (500+ REGISTROS / IDs 1001 EN ADELANTE)
+// ==========================================
+
+// Catálogos adicionales
+WITH ['Cédula de Ciudadanía','Cédula de Extranjería','Pasaporte','Tarjeta de Identidad','Registro Civil',
+      'Documento Nacional de Identidad','Permiso Especial de Permanencia','Carné Diplomático',
+      'Salvoconducto','Número de Identificación Tributaria'] AS nombres
+UNWIND range(11,500) AS i
+CREATE (:TipoDocumento {
+  id: 1000+i,
+  nombre_documento: 'Tipo de documento ' + toString(i),
+  descripcion: 'Tipo de documento auxiliar número ' + toString(i)
+});
+
+WITH ['Disponible','Ocupada','Mantenimiento'] AS nombres
+UNWIND range(4,500) AS i
+CREATE (:EstadoCama {
+  id: 1000+i,
+  nombre_estado: 'Estado auxiliar ' + toString(i)
+});
+
+WITH ['Terapia Física','Manualidades','Musicoterapia','Juegos de Mesa','Lectura Compartida',
+      'Yoga Suave','Cine Foro','Jardinería','Talleres de Memoria','Eucaristía / Culto'] AS nombres
+UNWIND range(11,500) AS i
+CREATE (:TipoActividad {
+  id: 1000+i,
+  nombre_tipo: 'Tipo de actividad ' + toString(i),
+  req_asistencia: (i % 3 <> 0),
+  observaciones: 'Actividad recreativa o terapéutica número ' + toString(i)
+});
+
+UNWIND range(11,500) AS i
+CREATE (:Enfermedad {
+  id: 1000+i,
+  nombre_enfermedad: 'Enfermedad catalogada ' + toString(i)
+});
+
+UNWIND range(11,500) AS i
+CREATE (:Alergia {
+  id: 1000+i,
+  nombre_alergia: 'Alergia catalogada ' + toString(i)
+});
+
+WITH ['Tableta','Cápsula','Jarabe','Inhalador','Ampolla'] AS presentaciones,
+     ['10 mg','20 mg','50 mg','100 mg','500 mg','850 mg'] AS concentraciones
+UNWIND range(11,500) AS i
+CREATE (:Medicamento {
+  id: 1000+i,
+  nombre: 'Medicamento genérico ' + toString(i),
+  principio_activo: 'Principio activo ' + toString(i),
+  presentacion: presentaciones[i % size(presentaciones)],
+  concentracion: concentraciones[i % size(concentraciones)],
+  codigo_invima: 'INVIMA-2025M-' + right('0000000' + toString(i), 7)
+});
+
+// Direcciones y Teléfonos Masivos
+WITH ['Calle','Carrera','Avenida','Diagonal','Transversal'] AS vias,
+     ['Chicó','Chapinero','Salitre','Heliópolis','Niza','Rosales','Cedritos','Suba','Usaquén','Teusaquillo'] AS barrios
+UNWIND range(11,500) AS i
+CREATE (:Direccion {
+  id: 1000+i,
+  tipo_via: vias[i % size(vias)],
+  nombre_via: toString(10 + (i * 3) % 170),
+  numero: toString(1 + (i * 7) % 99) + '-' + toString(1 + (i * 11) % 99),
+  complemento: 'Apto ' + toString(100 + i % 400),
+  barrio: barrios[i % size(barrios)],
+  ciudad: 'Bogotá',
+  departamento: 'Bogotá D.C.',
+  codigo_postal: toString(110000 + (i * 13) % 2000)
+});
+
+UNWIND range(11,500) AS i
+CREATE (:Telefono {
+  id: 1000+i,
+  numero: '3' + toString(100000000 + i * 7919),
+  indicativo: '+57',
+  tipo_telefono: CASE WHEN i % 5 = 0 THEN 'Fijo' ELSE 'Móvil' END
+});
+
+// Personas Masivas
+WITH ['Carlos','María','Jorge','Lucía','Andrés','Claudia','Héctor','Diana','Ricardo','Sandra',
+      'Roberto','Elena','Alfonso','Rosa','Gabriel','Carmen','Luis','Inés','Guillermo','Beatriz',
+      'Camilo','Paola','Sergio','Natalia','Julián','Valentina','Mauricio','Adriana','Fernando','Gloria'] AS nombres,
+     ['Pérez','Rodríguez','Martínez','Hernández','Ramírez','Torres','Vargas','Mendoza','Jiménez','Castro',
+      'Gutiérrez','Suárez','Londoño','Cifuentes','Restrepo','Duarte','Pacheco','Moreno','Valencia','Ochoa',
+      'Gómez','López','Silva','Rojas','Parra','Acosta','Medina','Morales','Ruiz','Castaño'] AS apellidos
+UNWIND range(1,1500) AS i
+CREATE (:Persona {
+  id: 1000+i,
+  numero_documento: toString(30000000 + i),
+  nombre_persona: nombres[i % size(nombres)],
+  apellido_persona: apellidos[(i * 7) % size(apellidos)] + ' ' + apellidos[(i * 11 + 3) % size(apellidos)],
+  fecha_nac: CASE
+               WHEN i <= 500  THEN date('1965-01-01') + duration({days: (i * 41) % 12000})
+               WHEN i <= 1000 THEN date('1950-01-01') + duration({days: (i * 37) % 15000})
+               ELSE                date('1928-01-01') + duration({days: (i * 53) % 8000})
+             END,
+  correo: 'persona' + toString(1000+i) + '@mail.com'
+});
+
+UNWIND range(1,1500) AS i
+MATCH (p:Persona {id: 1000+i})
+MATCH (t:TipoDocumento {id: 1 + CASE WHEN i % 10 = 0 THEN (i / 10) % 10 ELSE 0 END})
+CREATE (p)-[:TIENE_TIPO_DOCUMENTO]->(t);
+
+UNWIND range(1,1500) AS i
+MATCH (p:Persona {id: 1000+i}), (t:Telefono {id: 1 + (i-1) % 500})
+CREATE (p)-[:TIENE_TELEFONO]->(t);
+
+UNWIND range(1,1500) AS i
+MATCH (p:Persona {id: 1000+i}), (d:Direccion {id: 1 + (i * 3) % 500})
+CREATE (p)-[:TIENE_DIRECCION {tipo_direccion: 'Principal'}]->(d);
+
+// Habitaciones y Camas Masivas
+UNWIND range(11,500) AS i
+CREATE (:Habitacion {
+  id: 1000+i,
+  piso_habitacion: 1 + (i-1) / 50,
+  capacidad_maxima: 1 + i % 2
+});
+
+UNWIND range(11,500) AS i
+MATCH (h:Habitacion {id: 1000+i}), (e:EstadoCama {id: 2})
+CREATE (c:Cama {id: 1000+i, codigo_cama: 'CAMA-G' + toString(i)})
+CREATE (c)-[:EN_HABITACION]->(h)
+CREATE (c)-[:TIENE_ESTADO]->(e);
+
+// Empleados, Acudientes y Residentes Masivos
+WITH ['Médico General','Enfermera Jefe','Fisioterapeuta','Nutricionista','Auxiliar de Enfermería',
+      'Psicólogo','Trabajador Social','Auxiliar de Enfermería'] AS titulos,
+     ['Médico','Enfermera','Terapeuta','Nutricionista','Cuidador','Psicólogo','Trabajador Social','Cuidador'] AS roles
+UNWIND range(11,500) AS i
+MATCH (p:Persona {id: 1000+i})
+CREATE (e:Empleado {
+  id: 1000+i,
+  titulo_profesional: titulos[(i-1) % 8],
+  rol_empleado: roles[(i-1) % 8],
+  estado: CASE WHEN i % 40 = 0 THEN 'Inactivo' ELSE 'Activo' END
+})
+CREATE (e)-[:ES_PERSONA]->(p);
+
+WITH ['Hijo encargado de autorizaciones médicas','Hija disponible los fines de semana',
+      'Familiar con poder legal','Visitas diarias','Autorizado para pagos',
+      'Contacto para urgencias','Encargado de trámites administrativos'] AS obs
+UNWIND range(6,500) AS i
+MATCH (p:Persona {id: 1500+i})
+CREATE (a:Acudiente {id: 1000+i, observaciones: obs[i % size(obs)]})
+CREATE (a)-[:ES_PERSONA]->(p);
+
+UNWIND range(6,500) AS i
+MATCH (p:Persona {id: 2000+i}),
+      (c:Cama {id: 1000+i}),
+      (e:Empleado {id: 1000 + 2 + 8 * ((i-1) % 60)})
+CREATE (r:Residente {
+  id: 1000+i,
+  fecha_ingreso: date('2022-01-01') + duration({days: (i * 3) % 1400}),
+  estado: CASE WHEN i % 50 = 0 THEN 'Hospitalizado' ELSE 'Activo' END
+})
+CREATE (r)-[:ES_PERSONA]->(p)
+CREATE (r)-[:OCUPA_CAMA]->(c)
+CREATE (e)-[:RESPONSABLE_DE]->(r);
+
+WITH ['Hijo/a','Hermano/a','Sobrino/a','Cónyuge','Nieto/a','Primo/a','Yerno/Nuera','Amigo/a cercano','Tío/a','Representante Legal'] AS parentescos
+UNWIND range(6,500) AS i
+MATCH (r:Residente {id: 1000+i}), (a:Acudiente {id: 1000+i})
+CREATE (r)-[:TIENE_ACUDIENTE {
+  parentesco: parentescos[i % size(parentescos)],
+  es_contacto_principal: true,
+  observaciones: 'Contacto principal'
+}]->(a);
+
+// Turnos y Bitácoras Masivos
+UNWIND range(6,500) AS i
+MATCH (e:Empleado {id: 1000+i})
+CREATE (t:Turno {
+  id: 1000+i,
+  fecha: date('2026-11-01') + duration({days: i % 30}),
+  hora_inicio: CASE i % 3 WHEN 0 THEN time('06:00:00') WHEN 1 THEN time('14:00:00') ELSE time('22:00:00') END,
+  hora_fin:    CASE i % 3 WHEN 0 THEN time('14:00:00') WHEN 1 THEN time('22:00:00') ELSE time('06:00:00') END,
+  estado: CASE WHEN i % 7 = 0 THEN 'Completado' ELSE 'Programado' END
+})
+CREATE (e)-[:TIENE_TURNO]->(t);
+
+WITH ['Control Signos','Aseo','Visita Médica','Fisioterapia','Alimentación',
+      'Apoyo Psicológico','Incidencia leve','Suministro','Ronda nocturna','Cambio de posición'] AS tipos,
+     ['Toma de signos vitales sin novedades.','Aseo general y cambio de lencería.',
+      'Evaluación médica de rutina.','Sesión de movilidad articular.',
+      'Apoyo en alimentación asistida.','Charla de apoyo emocional.',
+      'Leve mareo controlado con descanso.','Entrega de merienda.',
+      'Residentes descansando sin alteraciones.','Rotación postural preventiva.'] AS descripciones
+UNWIND range(4,500) AS i
+MATCH (e:Empleado {id: 1000 + 1 + (i * 7) % 490}),
+      (h:Habitacion {id: 1000 + 1 + (i * 13) % 490})
+CREATE (b:Bitacora {
+  id: 1000+i,
+  fecha_hora: datetime('2026-10-01T06:00:00') + duration({minutes: i * 97}),
+  tipo_evento: tipos[i % size(tipos)],
+  descripcion: descripciones[i % size(descripciones)],
+  estado: CASE WHEN i % 9 = 0 THEN 'Atendido' ELSE 'Completado' END,
+  nivel_prioridad: 1 + i % 3
+})
+CREATE (e)-[:REGISTRO]->(b)
+CREATE (b)-[:EN_HABITACION]->(h);
+
+// Actividades Masivas
+WITH ['Sesión de estiramientos','Taller de pintura y arcilla','Tarde de boleros','Torneo de parqués',
+      'Lectura de poesía','Respiración y postura','Cine clásico','Siembra de flores',
+      'Agilidad mental','Acompañamiento espiritual'] AS descripciones
+UNWIND range(3,500) AS i
+MATCH (t:TipoActividad {id: 1 + (i-1) % 10}),
+      (e:Empleado {id: 1000 + 1 + (i * 3) % 490})
+CREATE (a:Actividad {
+  id: 1000+i,
+  descripcion: descripciones[(i-1) % 10] + ' #' + toString(i),
+  cupo_maximo: 8 + i % 18,
+  fecha_inicio: datetime('2026-11-02T09:00:00') + duration({days: i % 60, hours: i % 8}),
+  fecha_fin:    datetime('2026-11-02T10:00:00') + duration({days: i % 60, hours: i % 8}),
+  estado: 'Programada'
+})
+CREATE (a)-[:DE_TIPO]->(t)
+CREATE (e)-[:DIRIGE]->(a);
+
+WITH ['Presente','Presente','Presente','Ausente'] AS asistencias,
+     ['Activo','Moderado','Alto','Bajo'] AS niveles
+UNWIND range(6,500) AS i
+UNWIND [0,1,2] AS k
+MATCH (r:Residente {id: 1000+i}),
+      (a:Actividad {id: 1000 + 3 + (i - 1 + k * 167) % 495})
+CREATE (r)-[:PARTICIPA_EN {
+  id_participacion: (i-1) * 3 + k + 1,
+  asistencia: asistencias[(i + k) % 4],
+  nivel: niveles[(i + 2*k) % 4],
+  observaciones: 'Participación registrada automáticamente'
+}]->(a);
+
+// Historial Médico, Diagnósticos y Prescripciones Masivos
+WITH ['Antecedentes de hipertensión arterial controlada.',
+      'Diabetes mellitus tipo 2 con movilidad reducida.',
+      'Cardiopatía leve y deterioro cognitivo incipiente.',
+      'Hipertensión y alergias estacionales frecuentes.',
+      'Osteoporosis e insomnio recurrente.'] AS obs
+UNWIND range(3,500) AS i
+MATCH (r:Residente {id: 1000+i})
+CREATE (h:HistorialMedico {id: 1000+i, observaciones: obs[i % size(obs)]})
+CREATE (r)-[:TIENE_HISTORIAL]->(h);
+
+UNWIND range(3,1000) AS j
+MATCH (h:HistorialMedico {id: 1000 + 1 + (j-1) % 498}),
+      (e:Enfermedad {id: 1 + (j + 3 * ((j-1) / 500)) % 10})
+CREATE (d:Diagnostico {
+  id: 1000+j,
+  fecha_diagnostico: date('2015-01-01') + duration({days: (j * 13) % 3800}),
+  observaciones: 'Control periódico y seguimiento clínico'
+})
+CREATE (h)-[:TIENE_DIAGNOSTICO]->(d)
+CREATE (d)-[:DE_ENFERMEDAD]->(e);
+
+UNWIND range(3,500) AS i
+UNWIND [0,3] AS d
+MATCH (h:HistorialMedico {id: 1000+i}), (a:Alergia {id: 1 + (i + d) % 10})
+CREATE (h)-[:ALERGICO_A {observaciones: 'Reacción registrada en valoración de ingreso'}]->(a);
+
+WITH ['Cada 24 horas','Cada 12 horas','Cada 8 horas','Cada 24 horas en ayunas','Cada 24 horas en la noche'] AS frecuencias,
+     ['Tomar con agua','Tomar con los alimentos','No exceder la dosis diaria',
+      'Tomar en ayunas','Control de signos antes de administrar'] AS indicaciones
+UNWIND range(3,1000) AS j
+MATCH (h:HistorialMedico {id: 1000 + 1 + (j-1) % 498}),
+      (m:Medicamento {id: 1 + (j * 3) % 10}),
+      (d:Diagnostico {id: 1000+j})
+CREATE (p:Prescripcion {
+  id: 1000+j,
+  fecha_prescripcion: date('2026-01-01') + duration({days: j % 200}),
+  fecha_fin: CASE WHEN j % 4 = 0 THEN date('2026-01-01') + duration({days: j % 200 + 90}) ELSE null END,
+  dosis_indicada: CASE WHEN j % 5 = 0 THEN 0.5 ELSE 1.0 END,
+  frecuencia: frecuencias[j % size(frecuencias)],
+  indicaciones: indicaciones[j % size(indicaciones)]
+})
+CREATE (h)-[:TIENE_PRESCRIPCION]->(p)
+CREATE (p)-[:DE_MEDICAMENTO]->(m)
+CREATE (p)-[:PARA_DIAGNOSTICO]->(d);
+
+WITH ['Suministrado sin novedad','Dosis según horario establecido','Administrado con los alimentos',
+      'Paciente tolera bien el medicamento','Sin reacciones adversas'] AS obs
+UNWIND range(3,1500) AS k
+MATCH (p:Prescripcion {id: 1000 + 1 + (k-1) % 998}),
+      (e:Empleado {id: 1000 + 2 + 8 * ((k-1) % 60)})
+CREATE (a:AdministracionMedicamento {
+  id: 1000+k,
+  fecha_aplicacion: datetime('2026-10-01T08:00:00') + duration({hours: k * 5}),
+  dosis: CASE WHEN k % 5 = 0 THEN 0.5 ELSE 1.0 END,
+  descripcion: 'Administración programada #' + toString(k),
+  observaciones: obs[k % size(obs)]
+})
+CREATE (p)-[:TUVO_ADMINISTRACION]->(a)
+CREATE (e)-[:ADMINISTRO]->(a);
